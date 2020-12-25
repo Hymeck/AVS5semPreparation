@@ -31,7 +31,7 @@ namespace AVS5
 
         private static bool SHUFFLETHENTAKE = true;  // true - сначала все вопросы перемешиваются, потом из них берутся первые n штук. false - сначала из исходного упорядоченного списка берётся n тестов, потом они перемешиваются.
         private const bool SHOWRESULINSTANT = true;  //  true - результат ответа показывается сразу, после его введения. false - показывается только итоговый результат в конце теста. 
-        private const int FIRSTQUESTION = 0;  //  Номер вопроса с которого будет начинаться отбор тестов. Следует использовать, если хотите прорешать определённый вариант. Работает, если SHUFFLETHENTAKE установлен в false.
+        private static int FIRSTQUESTION = 0;  //  Номер вопроса с которого будет начинаться отбор тестов. Следует использовать, если хотите прорешать определённый вариант. Работает, если SHUFFLETHENTAKE установлен в false.
         private const string LOCATION = "avs_demo.txt";  //  Расположение файла с вопросами
         public static bool RANDOMIZEANSWERS = true;  //  true - варианты ответов распологаются в случайном порядке. false - варианты ответов стоят на одном месте
 
@@ -94,17 +94,29 @@ namespace AVS5
             return true;
         }
 
+        private static int amountOfTests = -1;
+        
         static void TestSetup()
         {
             int amountOfTests = 0;
             Console.WriteLine("Нажмите на любую клавишу...");
             Console.ReadKey();
             Console.Clear();
-            if (!SHUFFLETHENTAKE)
-                Console.Write($"Выберите количество вопросов (1-{questions.Count - FIRSTQUESTION}) (пропущено {FIRSTQUESTION} вопросов): ");
+
+            if (Program.amountOfTests < 1 || Program.amountOfTests >= questions.Count)
+            {
+                Console.Write(!SHUFFLETHENTAKE
+                    ? $"Выберите количество вопросов (1-{questions.Count - FIRSTQUESTION}) (пропущено {FIRSTQUESTION} вопросов): "
+                    : $"Выберите количество вопросов (1-{questions.Count}): ");
+                amountOfTests = EnterIntInRange(1, questions.Count);
+            }
+
             else
-                Console.Write($"Выберите количество вопросов (1-{questions.Count}): ");
-            amountOfTests = EnterIntInRange(1, questions.Count);
+            {
+                amountOfTests = Program.amountOfTests;
+            }
+            
+            
             if(!SHUFFLETHENTAKE)
                 Console.WriteLine($"\nБудут использованы вопросы №{FIRSTQUESTION + 1} - {FIRSTQUESTION + amountOfTests} из исходного списка\n");
             else
@@ -218,22 +230,38 @@ namespace AVS5
             }
         }
         
+        // amountOfQuestions skipFirstNQuestions -s -r
         // -s - сбросить SHUFFLETHENTAKE
         // -r - сбросить RANDOMIZEANSWERS
         private static void SetOptions(string[] args)
         {
+            try
+            {
+                int.TryParse(args[0], out amountOfTests);
+                int.TryParse(args[1], out FIRSTQUESTION);
+            }
+
+            catch (IndexOutOfRangeException)
+            {
+                
+            }
+
             foreach (var arg in args)
             {
-                switch (arg)
+                if (arg == "-s")
                 {
-                    case "-s":
-                        SHUFFLETHENTAKE = false;
-                        break;
-                    case "-r":
-                        RANDOMIZEANSWERS = false;
-                        break;
+                    SHUFFLETHENTAKE = false;
+                    break;
+                }
+
+                if (arg == "-r")
+                {
+                    RANDOMIZEANSWERS = false;
+                    break;
                 }
             }
+            
+            
         }
     }
 }
