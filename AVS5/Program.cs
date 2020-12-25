@@ -29,11 +29,11 @@ namespace AVS5
         * Устанавливаем SHUFFLETHENTAKE в false, FIRSTQUESTION приравниваем числу 20. Затем, в программе, указываем, что нам нужно 60 вопросов (80-20).
         */
 
-        private const bool SHUFFLETHENTAKE = true;  // true - сначала все вопросы перемешиваются, потом из них берутся первые n штук. false - сначала из исходного упорядоченного списка берётся n тестов, потом они перемешиваются.
+        private static bool SHUFFLETHENTAKE = true;  // true - сначала все вопросы перемешиваются, потом из них берутся первые n штук. false - сначала из исходного упорядоченного списка берётся n тестов, потом они перемешиваются.
         private const bool SHOWRESULINSTANT = true;  //  true - результат ответа показывается сразу, после его введения. false - показывается только итоговый результат в конце теста. 
         private const int FIRSTQUESTION = 0;  //  Номер вопроса с которого будет начинаться отбор тестов. Следует использовать, если хотите прорешать определённый вариант. Работает, если SHUFFLETHENTAKE установлен в false.
         private const string LOCATION = "avs_demo.txt";  //  Расположение файла с вопросами
-        public const bool RANDOMIZEANSWERS = true;  //  true - варианты ответов распологаются в случайном порядке. false - варианты ответов стоят на одном месте
+        public static bool RANDOMIZEANSWERS = true;  //  true - варианты ответов распологаются в случайном порядке. false - варианты ответов стоят на одном месте
 
 
 
@@ -208,12 +208,31 @@ namespace AVS5
 
         static void Main(string[] args)
         {
+            SetOptions(args);
             if (Init())
                 TestSetup();
             else
             {
                 Console.WriteLine("Нажмите любую клавишу для выхода");
                 Console.ReadKey();
+            }
+        }
+        
+        // -s - сбросить SHUFFLETHENTAKE
+        // -r - сбросить RANDOMIZEANSWERS
+        private static void SetOptions(string[] args)
+        {
+            foreach (var arg in args)
+            {
+                switch (arg)
+                {
+                    case "-s":
+                        SHUFFLETHENTAKE = false;
+                        break;
+                    case "-r":
+                        RANDOMIZEANSWERS = false;
+                        break;
+                }
             }
         }
     }
