@@ -18,7 +18,7 @@ namespace AVS5
         {
             StringBuilder sb = new StringBuilder();
             sb.AppendLine(Text);
-            if (!Program.RandomizeAnswers || IsRandomized)
+            if (!TestLoop.RandomizeAnswers || IsRandomized)
             {
                 //  Do not randomize possible answers
                 foreach (string s in Variants.Split(';'))
