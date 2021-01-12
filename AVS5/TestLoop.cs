@@ -8,67 +8,22 @@ namespace AVS5
 {
     public class TestLoop
     {
-        //######################
-        //#                    #
-        //#                    #
-        //#     НАСТРОЙКИ      #
-        //#                    #
-        //#                    #
-        //######################
-        #region ConfigurationParams
-        /// <summary>
-        /// true - сначала все вопросы перемешиваются, потом из них берутся первые n штук.
-        /// false - сначала из исходного упорядоченного списка берётся n тестов, потом они перемешиваются.
-        /// Как работает <see cref="ShuffleThenTake"/>?
-        /// Пусть у нас есть последовательность чисел (номера вопросов) 123456789.
-        /// Допустим, необходимо потренеровать 5 вопросов.
-        /// Если <see cref="ShuffleThenTake"/> = true, то произойдет следующее:
-        /// 123456789 ---(вопросы перемешиваются)---> 476592138 ---(берется 5 штук)---> 47659 - пул вопросов.
-        /// Если <see cref="ShuffleThenTake"/> = false, то произойдет следующее:
-        /// 123456789 ---(берём 5 штук)---> 12345 ---(вопросы перемешиваются)---> 43125 - пул вопросов.
-        /// Если необходимо потренеровать, например, с 20 по 80 вопрос, то делаем следующее:
-        /// Устанавливаем <see cref="ShuffleThenTake"/> в false,
-        /// <see cref="FirstQuestion"/> приравниваем числу 20.
-        /// Затем в программе указываем, что нужно 60 вопросов (80-20).
-        /// </summary>
-        private static bool ShuffleThenTake = true; 
-        /// <summary>
-        /// true - результат ответа показывается сразу, после его введения.
-        /// false - показывается только итоговый результат в конце теста.
-        /// </summary>
-        private const bool ShowResultInstantly = true;  
-        /// <summary>
-        /// Номер вопроса, с которого будет начинаться отбор тестов.
-        /// Следует использовать, если хотите прорешать определённый вариант.
-        /// Работает, если <see cref="ShuffleThenTake"/> сброшен.
-        /// </summary>
-        private static int FirstQuestion;
-        /// <summary>
-        /// Расположение файла с вопросами.
-        /// </summary>
-        private const string LOCATION = "avs_demo.txt";
-        /// <summary>
-        /// true - варианты ответов распологаются в случайном порядке.
-        /// false - варианты ответов стоят на одном месте.
-        /// </summary>
-        public static bool RandomizeAnswers = true;
-        #endregion ConfigurationParams
-
-        private static List<Question> questions = new ();
+        private readonly List<Question> _questions = new ();
+        private readonly TestOptions _options = new(); 
 
         /// <summary>
         /// Выводит в консоль конфигурационные значения
         /// </summary>
-        private static void PrintSettings()
+        private void PrintSettings()
         {
             Console.WriteLine("\n***ТЕКУЩИЕ НАСТРОЙКИ***\n");
             
-            Console.WriteLine($"{nameof(ShuffleThenTake)} = {ShuffleThenTake} (перемешать все тесты перед тем, как выбрать n штук)");
-            Console.WriteLine($"{nameof(ShowResultInstantly)} = {ShowResultInstantly} (мгновенное отображать правильность ответа на вопрос)");
-            Console.WriteLine($"{nameof(RandomizeAnswers)} = {RandomizeAnswers} (рандомизация вариантов ответа)");
+            Console.WriteLine($"{nameof(_options.ShuffleThenTake)} = {_options.ShuffleThenTake} (перемешать все тесты перед тем, как выбрать n штук)");
+            Console.WriteLine($"{nameof(_options.ShowResultInstantly)} = {_options.ShowResultInstantly} (мгновенное отображать правильность ответа на вопрос)");
+            Console.WriteLine($"{nameof(_options.IsRandomOrder)} = {_options.IsRandomOrder} (рандомизация вариантов ответа)");
             
-            if(!ShuffleThenTake)
-                Console.WriteLine($"{nameof(FirstQuestion)} = {FirstQuestion} (пропустить заданное количество вопросов)");
+            if(!_options.ShuffleThenTake)
+                Console.WriteLine($"{nameof(_options.FirstQuestion)} = {_options.FirstQuestion} (пропустить заданное количество вопросов)");
             
             Console.WriteLine($"\nНастроить данные параметры и прочитать более точное описание можно в начале программы\n");
         }
@@ -93,20 +48,20 @@ namespace AVS5
             return result;
         }
 
-        private static bool Init()
+        private  bool Init()
         {
             Console.OutputEncoding = Encoding.UTF8;
             
             string[] lines;
             try
             {
-                lines = File.ReadAllLines(LOCATION);
+                lines = File.ReadAllLines(TestOptions.LOCATION);
             }
             
             catch (Exception)
             {
                 // todo: delegate error printing
-                Console.WriteLine($"Файл по пути \"{LOCATION}\" не найден");
+                Console.WriteLine($"Файл по пути \"{TestOptions.LOCATION}\" не найден");
                 return false;
             }
             
@@ -114,7 +69,12 @@ namespace AVS5
             {
                 try
                 {
-                    questions.Add(new Question { Text = lines[i], Variants = lines[i + 1], RightAnswer = int.Parse(lines[i + 2]) });
+                    var question = new Question(
+                        lines[i], 
+                        lines[i + 1], 
+                        int.Parse(lines[i + 2]),
+                        _options.IsRandomOrder);
+                    _questions.Add(question);
                 }
                 
                 catch (Exception)
@@ -124,10 +84,10 @@ namespace AVS5
                 }
             }
             
-            if (ShuffleThenTake)
-                questions.Shuffle();
+            if (_options.ShuffleThenTake)
+                _questions.Shuffle();
             
-            Console.WriteLine($"Тесты успешно загружены ({questions.Count} шт.)");
+            Console.WriteLine($"Тесты успешно загружены ({_questions.Count} шт.)");
             
             // todo: delegate printing conf params?
             PrintSettings();
@@ -144,12 +104,12 @@ namespace AVS5
             Console.ReadKey();
             Console.Clear();
 
-            if (this.amountOfTests < 1 || this.amountOfTests >= questions.Count)
+            if (this.amountOfTests < 1 || this.amountOfTests >= _questions.Count)
             {
-                Console.Write(!ShuffleThenTake
-                    ? $"Выберите количество вопросов (1-{questions.Count - FirstQuestion}) (пропущено {FirstQuestion} вопросов): "
-                    : $"Выберите количество вопросов (1-{questions.Count}): ");
-                amountOfTests = EnterIntInRange(1, questions.Count);
+                Console.Write(!_options.ShuffleThenTake
+                    ? $"Выберите количество вопросов (1-{_questions.Count - _options.FirstQuestion}) (пропущено {_options.FirstQuestion} вопросов): "
+                    : $"Выберите количество вопросов (1-{_questions.Count}): ");
+                amountOfTests = EnterIntInRange(1, _questions.Count);
             }
 
             else
@@ -157,15 +117,15 @@ namespace AVS5
                 amountOfTests = this.amountOfTests;
             }
             
-            Console.WriteLine(!ShuffleThenTake
-                ? $"\nБудут использованы вопросы №{FirstQuestion + 1} - {FirstQuestion + amountOfTests} из исходного списка\n"
+            Console.WriteLine(!_options.ShuffleThenTake
+                ? $"\nБудут использованы вопросы №{_options.FirstQuestion + 1} - {_options.FirstQuestion + amountOfTests} из исходного списка\n"
                 : $"\nВопросы будут выбраны из всего списка\n");
 
-            var questionsForTest = ShuffleThenTake 
-                ? questions.Take(amountOfTests).ToList() 
-                : questions.Skip(FirstQuestion).Take(amountOfTests).ToList();
+            var questionsForTest = _options.ShuffleThenTake 
+                ? _questions.Take(amountOfTests).ToList() 
+                : _questions.Skip(_options.FirstQuestion).Take(amountOfTests).ToList();
             
-            if (!ShuffleThenTake)
+            if (!_options.ShuffleThenTake)
                 questionsForTest.Shuffle();
             
             BeginTest(questionsForTest);
@@ -187,7 +147,7 @@ namespace AVS5
                 questionsForTest[i].ChosenAnswer = EnterIntInRange(1, 5);
                 questionsForTest[i].IsRight = questionsForTest[i].RightAnswer == questionsForTest[i].ChosenAnswer;
                 
-                if (!ShowResultInstantly) 
+                if (!_options.ShowResultInstantly) 
                     continue;
                 
                 Console.WriteLine();
@@ -272,7 +232,7 @@ namespace AVS5
             try
             {
                 int.TryParse(args[0], out amountOfTests);
-                int.TryParse(args[1], out FirstQuestion);
+                int.TryParse(args[1], out _options.FirstQuestion);
             }
 
             catch (IndexOutOfRangeException)
@@ -284,13 +244,13 @@ namespace AVS5
             {
                 if (arg == "-s")
                 {
-                    ShuffleThenTake = false;
+                    _options.ShuffleThenTake = false;
                     break;
                 }
 
                 if (arg == "-r")
                 {
-                    RandomizeAnswers = false;
+                    _options.IsRandomOrder = false;
                     break;
                 }
             }
