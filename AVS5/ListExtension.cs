@@ -6,13 +6,14 @@ using System.Threading.Tasks;
 
 namespace AVS5
 {
-    static class ListExtension
+    public static class ListExtension
     {
-        private static Random rng = new Random();
+        private static Random rng = new ();
 
         public static List<T> Shuffle<T>(this List<T> list)
         {
-            int n = list.Count;
+            var n = list.Count;
+            
             while (n > 1)
             {
                 n--;
@@ -21,6 +22,7 @@ namespace AVS5
                 list[k] = list[n];
                 list[n] = value;
             }
+            
             return list;
         }
     }

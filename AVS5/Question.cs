@@ -5,20 +5,20 @@ using System.Text;
 
 namespace AVS5
 {
-    class Question
+    public class Question
     {
         public string Text { get; set; }
         public string Variants { get; set; }
-        public int ChosenAnswer { get; set; } = 0;
+        public int ChosenAnswer { get; set; }
         public int RightAnswer { get; set; }
-        public bool IsRight { get; set; } = false;
-        public bool IsRandomized { get; set; } = false;
+        public bool IsRight { get; set; }
+        public bool IsRandomized { get; set; }
 
         public override string ToString()
         {
             StringBuilder sb = new StringBuilder();
             sb.AppendLine(Text);
-            if (!Program.RANDOMIZEANSWERS || IsRandomized)
+            if (!Program.RandomizeAnswers || IsRandomized)
             {
                 //  Do not randomize possible answers
                 foreach (string s in Variants.Split(';'))

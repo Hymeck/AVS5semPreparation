@@ -8,7 +8,7 @@ using System.Text;
 
 namespace AVS5
 {
-    class Program
+    public class Program
     {
         //######################
         //#                    #
@@ -17,52 +17,85 @@ namespace AVS5
         //#                    #
         //#                    #
         //######################
+        #region ConfigurationParams
+        /// <summary>
+        /// true - сначала все вопросы перемешиваются, потом из них берутся первые n штук.
+        /// false - сначала из исходного упорядоченного списка берётся n тестов, потом они перемешиваются.
+        /// Как работает <see cref="ShuffleThenTake"/>?
+        /// Пусть у нас есть последовательность чисел (номера вопросов) 123456789.
+        /// Допустим, необходимо потренеровать 5 вопросов.
+        /// Если <see cref="ShuffleThenTake"/> = true, то произойдет следующее:
+        /// 123456789 ---(вопросы перемешиваются)---> 476592138 ---(берется 5 штук)---> 47659 - пул вопросов.
+        /// Если <see cref="ShuffleThenTake"/> = false, то произойдет следующее:
+        /// 123456789 ---(берём 5 штук)---> 12345 ---(вопросы перемешиваются)---> 43125 - пул вопросов.
+        /// Если необходимо потренеровать, например, с 20 по 80 вопрос, то делаем следующее:
+        /// Устанавливаем <see cref="ShuffleThenTake"/> в false,
+        /// <see cref="FirstQuestion"/> приравниваем числу 20.
+        /// Затем в программе указываем, что нужно 60 вопросов (80-20).
+        /// </summary>
+        private static bool ShuffleThenTake = true; 
+        /// <summary>
+        /// true - результат ответа показывается сразу, после его введения.
+        /// false - показывается только итоговый результат в конце теста.
+        /// </summary>
+        private const bool ShowResultInstantly = true;  
+        /// <summary>
+        /// Номер вопроса, с которого будет начинаться отбор тестов.
+        /// Следует использовать, если хотите прорешать определённый вариант.
+        /// Работает, если <see cref="ShuffleThenTake"/> сброшен.
+        /// </summary>
+        private static int FirstQuestion;
+        /// <summary>
+        /// Расположение файла с вопросами.
+        /// </summary>
+        private const string LOCATION = "avs_demo.txt";
+        /// <summary>
+        /// true - варианты ответов распологаются в случайном порядке.
+        /// false - варианты ответов стоят на одном месте.
+        /// </summary>
+        public static bool RandomizeAnswers = true;
+        #endregion ConfigurationParams
 
-        /*
-        * Как работает SHUFFLETHENTAKE?
-        * Пусть у нас есть последовательность чисел (номера вопросов) 123456789
-        * Допустим мы хотим потренеровать 5 вопросов
-        * Если SHUFFLETHENTAKE = true, то произойдет следующее: 123456789 ---(перемешиваем вопросы)---> 476592138 ---(берём 5 штук)---> 47659 - пул вопросов, которые будут появляться.
-        * Если SHUFFLETHENTAKE = false, то произойдет следующее: 123456789 ---(берём 5 штук)---> 12345 ---(перемешиваем)---> 43125 - пул вопросов, которые будут появляться.
-        * 
-        * Если мы хотим, допустим, потренеровать с 20 по 80 вопрос, то делаем следующее:
-        * Устанавливаем SHUFFLETHENTAKE в false, FIRSTQUESTION приравниваем числу 20. Затем, в программе, указываем, что нам нужно 60 вопросов (80-20).
-        */
+        private static List<Question> questions = new ();
 
-        private static bool SHUFFLETHENTAKE = true;  // true - сначала все вопросы перемешиваются, потом из них берутся первые n штук. false - сначала из исходного упорядоченного списка берётся n тестов, потом они перемешиваются.
-        private const bool SHOWRESULINSTANT = true;  //  true - результат ответа показывается сразу, после его введения. false - показывается только итоговый результат в конце теста. 
-        private static int FIRSTQUESTION = 0;  //  Номер вопроса с которого будет начинаться отбор тестов. Следует использовать, если хотите прорешать определённый вариант. Работает, если SHUFFLETHENTAKE установлен в false.
-        private const string LOCATION = "avs_demo.txt";  //  Расположение файла с вопросами
-        public static bool RANDOMIZEANSWERS = true;  //  true - варианты ответов распологаются в случайном порядке. false - варианты ответов стоят на одном месте
-
-
-
-        private static List<Question> questions = new List<Question>();
-
-        static void PrintSettings()
+        /// <summary>
+        /// Выводит в консоль конфигурационные значения
+        /// </summary>
+        private static void PrintSettings()
         {
             Console.WriteLine("\n***ТЕКУЩИЕ НАСТРОЙКИ***\n");
-            Console.WriteLine($"SHUFFLETHENTAKE = {SHUFFLETHENTAKE} (перемешать все тесты перед тем, как выбрать n штук)");
-            Console.WriteLine($"SHOWRESULINSTANT = {SHOWRESULINSTANT} (мгновенное отображать правильность ответа на вопрос)");
-            Console.WriteLine($"RANDOMIZEANSWERS = {RANDOMIZEANSWERS} (рандомизация вариантов ответа)");
-            if(!SHUFFLETHENTAKE)
-                Console.WriteLine($"FIRSTQUESTION = {FIRSTQUESTION} (пропустить заданное количество вопросов)");
+            
+            Console.WriteLine($"{nameof(ShuffleThenTake)} = {ShuffleThenTake} (перемешать все тесты перед тем, как выбрать n штук)");
+            Console.WriteLine($"{nameof(ShowResultInstantly)} = {ShowResultInstantly} (мгновенное отображать правильность ответа на вопрос)");
+            Console.WriteLine($"{nameof(RandomizeAnswers)} = {RandomizeAnswers} (рандомизация вариантов ответа)");
+            
+            if(!ShuffleThenTake)
+                Console.WriteLine($"{nameof(FirstQuestion)} = {FirstQuestion} (пропустить заданное количество вопросов)");
+            
             Console.WriteLine($"\nНастроить данные параметры и прочитать более точное описание можно в начале программы\n");
-
         }
 
         //Проверка диапазона включает граничные значения
-        static int EnterIntInRange(int min, int max)
+        /// <summary>
+        /// Цикл считывания числа с консоли.
+        /// Если введенную строку удается преобразовать в число, возвращает это число.
+        /// Иначе выводится сообщение в консоль и предлагается ввести число
+        /// </summary>
+        /// <param name="min">Левая граница</param>
+        /// <param name="max">Правая граница</param>
+        /// <returns>Число в промежутке [<paramref name="min"/>; <paramref name="max"/>]</returns>
+        private static int EnterIntInRange(int min, int max)
         {
-            int toReturn;
-            while (!int.TryParse(Console.ReadLine(), out toReturn) || !(toReturn >= min && toReturn <= max))
-            {
+            int result;
+            
+            while (!int.TryParse(Console.ReadLine(), out result) || !(result >= min && result <= max))
+                // todo: add delegate for printing error?
                 Console.Write("Неверный ввод, повторите еще раз: ");
-            }
-            return toReturn;
+            
+            return result;
         }
 
-        public static bool Init()
+        private static bool Init()
         {
             Console.OutputEncoding = Encoding.UTF8;
             string[] lines;
@@ -72,6 +105,7 @@ namespace AVS5
             }
             catch (Exception)
             {
+                // todo: delegate error printing
                 Console.WriteLine($"Файл по пути \"{LOCATION}\" не найден");
                 return false;
             }
@@ -87,26 +121,28 @@ namespace AVS5
                     return false;
                 }
             }
-            if (SHUFFLETHENTAKE)
+            if (ShuffleThenTake)
                 questions.Shuffle();
             Console.WriteLine($"Тесты успешно загружены ({questions.Count} шт.)");
+            // todo: delegate printing conf params?
             PrintSettings();
             return true;
         }
 
         private static int amountOfTests = -1;
         
-        static void TestSetup()
+        private static void TestSetup()
         {
-            int amountOfTests = 0;
+            int amountOfTests;
+            
             Console.WriteLine("Нажмите на любую клавишу...");
             Console.ReadKey();
             Console.Clear();
 
             if (Program.amountOfTests < 1 || Program.amountOfTests >= questions.Count)
             {
-                Console.Write(!SHUFFLETHENTAKE
-                    ? $"Выберите количество вопросов (1-{questions.Count - FIRSTQUESTION}) (пропущено {FIRSTQUESTION} вопросов): "
+                Console.Write(!ShuffleThenTake
+                    ? $"Выберите количество вопросов (1-{questions.Count - FirstQuestion}) (пропущено {FirstQuestion} вопросов): "
                     : $"Выберите количество вопросов (1-{questions.Count}): ");
                 amountOfTests = EnterIntInRange(1, questions.Count);
             }
@@ -116,104 +152,110 @@ namespace AVS5
                 amountOfTests = Program.amountOfTests;
             }
             
+            Console.WriteLine(!ShuffleThenTake
+                ? $"\nБудут использованы вопросы №{FirstQuestion + 1} - {FirstQuestion + amountOfTests} из исходного списка\n"
+                : $"\nВопросы будут выбраны из всего списка\n");
+
+            var questionsForTest = ShuffleThenTake 
+                ? questions.Take(amountOfTests).ToList() 
+                : questions.Skip(FirstQuestion).Take(amountOfTests).ToList();
             
-            if(!SHUFFLETHENTAKE)
-                Console.WriteLine($"\nБудут использованы вопросы №{FIRSTQUESTION + 1} - {FIRSTQUESTION + amountOfTests} из исходного списка\n");
-            else
-                Console.WriteLine($"\nВопросы будут выбраны из всего списка\n");
-            List<Question> questionsForTest;
-            if (SHUFFLETHENTAKE)
-                questionsForTest = questions.Take(amountOfTests).ToList();
-            else
-                questionsForTest = questions.Skip(FIRSTQUESTION).Take(amountOfTests).ToList();
-            if (!SHUFFLETHENTAKE)
+            if (!ShuffleThenTake)
                 questionsForTest.Shuffle();
+            
             BeginTest(questionsForTest);
         }
 
-        static void BeginTest(List<Question> questionsForTest)
+        private static void BeginTest(List<Question> questionsForTest)
         {
             Console.WriteLine("Нажмите на любую клавишу для начала теста ...");
             Console.ReadKey();
             Console.Clear();
-            for (int i = 0; i < questionsForTest.Count; i++)
+            
+            for (var i = 0; i < questionsForTest.Count; i++)
             {
                 Console.Clear();
                 Console.WriteLine($"Вопрос {i + 1} из {questionsForTest.Count}\n");
                 Console.WriteLine(questionsForTest[i]);
                 Console.Write("Ваш ответ (1-5): ");
+                
                 questionsForTest[i].ChosenAnswer = EnterIntInRange(1, 5);
                 questionsForTest[i].IsRight = questionsForTest[i].RightAnswer == questionsForTest[i].ChosenAnswer;
-                if (SHOWRESULINSTANT)
+                
+                if (!ShowResultInstantly) 
+                    continue;
+                
+                Console.WriteLine();
+                if (questionsForTest[i].IsRight)
+                    Console.WriteLine("Правильно");
+                
+                else
                 {
-                    Console.WriteLine();
-                    if (questionsForTest[i].IsRight)
-                    {
-                        Console.WriteLine("Правильно");
-                    }
-                    else
-                    {
-                        Console.WriteLine("Неправильно");
-                        Console.WriteLine($"Правильный ответ: {questionsForTest[i].RightAnswer}");
-                    }
-                    Console.WriteLine("\nНажмите на любую клавишу...");
-                    Console.ReadKey();
+                    Console.WriteLine("Неправильно");
+                    Console.WriteLine($"Правильный ответ: {questionsForTest[i].RightAnswer}");
                 }
+                
+                Console.WriteLine("\nНажмите на любую клавишу...");
+                Console.ReadKey();
             }
+            
             EndTest(questionsForTest);
         }
 
-        static void EndTest(List<Question> questionsForTest)
+        private static void EndTest(List<Question> questionsForTest)
         {
             Console.Clear();
-            int amountOfRhightAnswers = questionsForTest.Where(q => q.IsRight == true).Count();
-            Console.WriteLine($"Результат {amountOfRhightAnswers} из {questionsForTest.Count} ({(int)((double)amountOfRhightAnswers / questionsForTest.Count * 100)}%)\n");
+            var amountOfRightAnswers = questionsForTest.Count(q => q.IsRight);
+            
+            Console.WriteLine($"Результат {amountOfRightAnswers} из {questionsForTest.Count} ({(int)((double)amountOfRightAnswers / questionsForTest.Count * 100)}%)\n");
             Console.WriteLine("Выберите опцию:");
             Console.WriteLine("1 - Просмотр всех отвеченных вопросов");
             Console.WriteLine("2 - Просмотр вопросов с неверным ответом");
             Console.WriteLine("3 - Выход");
-            int option = EnterIntInRange(1, 3);
+            
+            var option = EnterIntInRange(1, 3);
+            
+            Console.Clear();
             switch (option)
             {
                 case 1:
+                {
+                    foreach (var q in questionsForTest)
                     {
-                        Console.Clear();
-                        foreach (Question q in questionsForTest)
-                        {
-                            if (!q.IsRight)
-                                Console.WriteLine("\n*************WRONG*************");
-                            else
-                                Console.WriteLine("\n*******************************");
-                            Console.WriteLine(q);
-                            Console.WriteLine($"\nПравльный ответ: {q.RightAnswer}\nВаш ответ: {q.ChosenAnswer}\n");
-                        }
-                        Console.WriteLine("Нажмите любую клавишу для выхода");
-                        Console.ReadKey();
-                        break;
+                        Console.WriteLine(!q.IsRight
+                            ? "\n*************WRONG*************"
+                            : "\n*******************************");
+                        Console.WriteLine(q);
+                        Console.WriteLine($"\nПравльный ответ: {q.RightAnswer}\nВаш ответ: {q.ChosenAnswer}\n");
                     }
+
+                    Console.WriteLine("Нажмите любую клавишу для выхода");
+                    Console.ReadKey();
+                    break;
+                }
+                
                 case 2:
+                {
+                    if (!questionsForTest.Any(question => !question.IsRight))
                     {
-                        Console.Clear();
-                        if (questionsForTest.Where(qu => qu.IsRight == false).Count() == 0)
-                        {
-                            Console.WriteLine("Empty list");
-                            break;
-                        }
-                        foreach (Question q in questionsForTest.Where(qu => qu.IsRight == false))
-                        {
-                            Console.WriteLine("\n*******************************");
-                            Console.WriteLine(q);
-                            Console.WriteLine($"Правльный ответ: {q.RightAnswer}\nВаш ответ: {q.ChosenAnswer}\n");
-                        }
-                        Console.WriteLine("Нажмите любую клавишу для выхода");
-                        Console.ReadKey();
+                        Console.WriteLine("Empty list");
                         break;
                     }
+
+                    foreach (var q in questionsForTest.Where(question => !question.IsRight))
+                    {
+                        Console.WriteLine("\n*******************************");
+                        Console.WriteLine(q);
+                        Console.WriteLine($"Правльный ответ: {q.RightAnswer}\nВаш ответ: {q.ChosenAnswer}\n");
+                    }
+
+                    Console.WriteLine("Нажмите любую клавишу для выхода");
+                    Console.ReadKey();
+                    break;
+                }
+                
                 case 3:
-                    {
-                        Console.Clear();
-                        break;
-                    }
+                    break;
             }
         }
 
@@ -238,7 +280,7 @@ namespace AVS5
             try
             {
                 int.TryParse(args[0], out amountOfTests);
-                int.TryParse(args[1], out FIRSTQUESTION);
+                int.TryParse(args[1], out FirstQuestion);
             }
 
             catch (IndexOutOfRangeException)
@@ -250,18 +292,16 @@ namespace AVS5
             {
                 if (arg == "-s")
                 {
-                    SHUFFLETHENTAKE = false;
+                    ShuffleThenTake = false;
                     break;
                 }
 
                 if (arg == "-r")
                 {
-                    RANDOMIZEANSWERS = false;
+                    RandomizeAnswers = false;
                     break;
                 }
             }
-            
-            
         }
     }
 }
