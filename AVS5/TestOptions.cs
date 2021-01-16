@@ -32,7 +32,7 @@
         /// <summary>
         /// Расположение файла с вопросами.
         /// </summary>
-        public const string LOCATION = "avs_demo.txt";
+        public string Location = "avs_demo.txt";
         /// <summary>
         /// true - варианты ответов распологаются в случайном порядке.
         /// false - варианты ответов стоят на одном месте.

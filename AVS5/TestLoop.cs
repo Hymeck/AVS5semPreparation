@@ -8,7 +8,7 @@ namespace AVS5
 {
     public class TestLoop
     {
-        private readonly List<Question> _questions = new ();
+        private readonly IList<Question> _questions = new List<Question>();
         private readonly TestOptions _options = new(); 
 
         /// <summary>
@@ -32,7 +32,7 @@ namespace AVS5
         /// <summary>
         /// Цикл считывания числа с консоли.
         /// Если введенную строку удается преобразовать в число, возвращает это число.
-        /// Иначе выводится сообщение в консоль и предлагается ввести число
+        /// Иначе выводится сообщение в консоль и предлагается ввести число.
         /// </summary>
         /// <param name="min">Левая граница</param>
         /// <param name="max">Правая граница</param>
@@ -55,13 +55,13 @@ namespace AVS5
             string[] lines;
             try
             {
-                lines = File.ReadAllLines(TestOptions.LOCATION);
+                lines = File.ReadAllLines(_options.Location);
             }
             
             catch (Exception)
             {
                 // todo: delegate error printing
-                Console.WriteLine($"Файл по пути \"{TestOptions.LOCATION}\" не найден");
+                Console.WriteLine($"Файл по пути \"{_options.Location}\" не найден");
                 return false;
             }
             
@@ -94,7 +94,7 @@ namespace AVS5
             return true;
         }
 
-        private int amountOfTests = -1;
+        private int _amountOfTests = -1;
         
         private void TestSetup()
         {
@@ -104,7 +104,7 @@ namespace AVS5
             Console.ReadKey();
             Console.Clear();
 
-            if (this.amountOfTests < 1 || this.amountOfTests >= _questions.Count)
+            if (_amountOfTests < 1 || _amountOfTests >= _questions.Count)
             {
                 Console.Write(!_options.ShuffleThenTake
                     ? $"Выберите количество вопросов (1-{_questions.Count - _options.FirstQuestion}) (пропущено {_options.FirstQuestion} вопросов): "
@@ -114,7 +114,7 @@ namespace AVS5
 
             else
             {
-                amountOfTests = this.amountOfTests;
+                amountOfTests = _amountOfTests;
             }
             
             Console.WriteLine(!_options.ShuffleThenTake
@@ -131,7 +131,7 @@ namespace AVS5
             BeginTest(questionsForTest);
         }
 
-        private void BeginTest(List<Question> questionsForTest)
+        private void BeginTest(IList<Question> questionsForTest)
         {
             Console.WriteLine("Нажмите на любую клавишу для начала теста ...");
             Console.ReadKey();
@@ -167,7 +167,7 @@ namespace AVS5
             EndTest(questionsForTest);
         }
 
-        private void EndTest(List<Question> questionsForTest)
+        private void EndTest(IList<Question> questionsForTest)
         {
             Console.Clear();
             var amountOfRightAnswers = questionsForTest.Count(q => q.IsRight);
@@ -207,6 +207,7 @@ namespace AVS5
                         break;
                     }
 
+                    //todo: fix incorrect answer placement (it can be: right answer number == wrong answer number
                     foreach (var q in questionsForTest.Where(question => !question.IsRight))
                     {
                         Console.WriteLine("\n*******************************");
@@ -227,11 +228,11 @@ namespace AVS5
         // amountOfQuestions skipFirstNQuestions -s -r
         // -s - сбросить SHUFFLETHENTAKE
         // -r - сбросить RANDOMIZEANSWERS
-        private  void SetOptions(string[] args)
+        private void SetOptions(string[] args)
         {
             try
             {
-                int.TryParse(args[0], out amountOfTests);
+                int.TryParse(args[0], out _amountOfTests);
                 int.TryParse(args[1], out _options.FirstQuestion);
             }
 
