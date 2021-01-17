@@ -11,6 +11,10 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AVS5.Core", "AVS5.Core\AVS5
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AVS5.Test", "AVS5.Test\AVS5.Test.csproj", "{DC74DAB2-849C-4C3C-877B-C8CD38B11580}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AVS5.Configuration", "AVS5.Configuration\AVS5.Configuration.csproj", "{2FC66A73-69A1-43FA-9D33-88F81440D899}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AVS5.Input", "AVS5.Input\AVS5.Input.csproj", "{9759C469-ABDC-4E20-BF88-8D9DEE8EEADC}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -33,6 +37,14 @@ Global
 		{DC74DAB2-849C-4C3C-877B-C8CD38B11580}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{DC74DAB2-849C-4C3C-877B-C8CD38B11580}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{DC74DAB2-849C-4C3C-877B-C8CD38B11580}.Release|Any CPU.Build.0 = Release|Any CPU
+		{2FC66A73-69A1-43FA-9D33-88F81440D899}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{2FC66A73-69A1-43FA-9D33-88F81440D899}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{2FC66A73-69A1-43FA-9D33-88F81440D899}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{2FC66A73-69A1-43FA-9D33-88F81440D899}.Release|Any CPU.Build.0 = Release|Any CPU
+		{9759C469-ABDC-4E20-BF88-8D9DEE8EEADC}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{9759C469-ABDC-4E20-BF88-8D9DEE8EEADC}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{9759C469-ABDC-4E20-BF88-8D9DEE8EEADC}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{9759C469-ABDC-4E20-BF88-8D9DEE8EEADC}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
