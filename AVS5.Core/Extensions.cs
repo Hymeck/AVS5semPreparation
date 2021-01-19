@@ -25,7 +25,7 @@ namespace AVS5.Core
         /// <param name="closingCharAfterNumber">Encloses number.</param>
         /// <param name="s">Determines starting enumeration number (1 or 0).</param>
         /// <returns>Multiline string. Line contains order number, <see cref="closingCharAfterNumber"/>, space and i'th source element.</returns>
-        public static string FromIList(this IList<string> source, char closingCharAfterNumber = ')', StarterPoint s = StarterPoint.One)
+        public static string FromIList<T>(this IList<T> source, char closingCharAfterNumber = ')', StarterPoint s = StarterPoint.One)
         {
             var sb = new StringBuilder();
             for (var i = 0; i < source.Count; i++)
@@ -34,7 +34,7 @@ namespace AVS5.Core
         }
         
         /// <summary>
-        /// Uses in <see cref="Extensions.FromIList"/> method for determing
+        /// Used in <see cref="Extensions.FromIList{T}"/> method for determing
         /// starting numerating number.
         /// </summary>
         public enum StarterPoint 

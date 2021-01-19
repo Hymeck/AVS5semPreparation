@@ -15,6 +15,10 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AVS5.Configuration", "AVS5.
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AVS5.Input", "AVS5.Input\AVS5.Input.csproj", "{9759C469-ABDC-4E20-BF88-8D9DEE8EEADC}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AVS5.Client.Console", "AVS5.Client.Console\AVS5.Client.Console.csproj", "{AD1D0B25-C3F3-4CC9-A5D5-34435FCBA693}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AVS5.Client", "AVS5.Client\AVS5.Client.csproj", "{9BCDF526-86D0-4730-8C02-FE570D55DF0B}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -45,6 +49,14 @@ Global
 		{9759C469-ABDC-4E20-BF88-8D9DEE8EEADC}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{9759C469-ABDC-4E20-BF88-8D9DEE8EEADC}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{9759C469-ABDC-4E20-BF88-8D9DEE8EEADC}.Release|Any CPU.Build.0 = Release|Any CPU
+		{AD1D0B25-C3F3-4CC9-A5D5-34435FCBA693}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{AD1D0B25-C3F3-4CC9-A5D5-34435FCBA693}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{AD1D0B25-C3F3-4CC9-A5D5-34435FCBA693}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{AD1D0B25-C3F3-4CC9-A5D5-34435FCBA693}.Release|Any CPU.Build.0 = Release|Any CPU
+		{9BCDF526-86D0-4730-8C02-FE570D55DF0B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{9BCDF526-86D0-4730-8C02-FE570D55DF0B}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{9BCDF526-86D0-4730-8C02-FE570D55DF0B}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{9BCDF526-86D0-4730-8C02-FE570D55DF0B}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

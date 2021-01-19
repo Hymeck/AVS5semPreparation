@@ -5,7 +5,6 @@
     /// </summary>
     public class TestConfiguration
     {
-        public const string DefaultLocation = "avs_demo.txt";
         /// <summary>
         /// true - сначала все вопросы перемешиваются, потом из них берутся первые n штук.
         /// false - сначала из исходного упорядоченного списка берётся n тестов, потом они перемешиваются.
@@ -21,22 +20,21 @@
         /// <see cref="FirstQuestion"/> приравниваем числу 20.
         /// Затем в программе указываем, что нужно 60 вопросов (80-20).
         /// </summary>
-        public readonly bool ShuffleThenTake; 
+        public readonly bool ShuffleThenTake;
+
         /// <summary>
         /// true - результат ответа показывается сразу, после его введения.
         /// false - показывается только итоговый результат в конце теста.
         /// </summary>
-        public readonly bool ShowResultInstantly;  
+        public readonly bool ShowResultInstantly;
+
         /// <summary>
         /// Номер вопроса, с которого будет начинаться отбор тестов.
         /// Следует использовать, если хотите прорешать определённый вариант.
         /// Работает, если <see cref="ShuffleThenTake"/> сброшен.
         /// </summary>
         public readonly int FirstQuestion;
-        /// <summary>
-        /// Расположение файла с вопросами.
-        /// </summary>
-        public readonly string Location;
+
         /// <summary>
         /// true - варианты ответов распологаются в случайном порядке.
         /// false - варианты ответов стоят на одном месте.
@@ -44,17 +42,15 @@
         public readonly bool IsRandomOrder;
 
         public TestConfiguration(
-            bool shuffleThenTake = false, 
+            bool shuffleThenTake = false,
             bool showResultInstantly = true,
             bool isRandomOrder = true,
-            int firstQuestion = 1,
-            string location = DefaultLocation)
+            int firstQuestion = 1)
         {
             ShuffleThenTake = shuffleThenTake;
             ShowResultInstantly = showResultInstantly;
             IsRandomOrder = isRandomOrder;
             FirstQuestion = firstQuestion;
-            Location = location;
         }
     }
 }

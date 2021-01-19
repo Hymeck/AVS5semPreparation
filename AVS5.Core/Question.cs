@@ -2,9 +2,8 @@
 
 namespace AVS5.Core
 {
-    public record Question(string Text, IList<string> Answers, IList<int> RightAnswers)
+    public class Question : BaseQuestion
     {
-        public override string ToString() => 
-            Answers.FromIList();
+        public Question(string text, IList<string> answers, IList<int> rightAnswers) : base(text, answers, rightAnswers) { }
     }
 }
