@@ -29,7 +29,7 @@ namespace AVS5.Core
         {
             var sb = new StringBuilder();
             for (var i = 0; i < source.Count; i++)
-                sb.AppendLine($"{i + s}{closingCharAfterNumber} {source[i]}");
+                sb.AppendLine($"{(int)(i + s)}{closingCharAfterNumber} {source[i]}");
             return sb.ToString();
         }
         

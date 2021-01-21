@@ -9,4 +9,10 @@
       <ProjectReference Include="..\AVS5.Client\AVS5.Client.csproj" />
     </ItemGroup>
 
+    <ItemGroup>
+      <None Update="avs_demo.txt">
+        <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+      </None>
+    </ItemGroup>
+
 </Project>

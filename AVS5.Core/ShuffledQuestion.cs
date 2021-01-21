@@ -1,16 +1,17 @@
 ﻿using System.Collections.Generic;
+using System.Collections.Immutable;
 using System.Linq;
 
 namespace AVS5.Core
 {
     // todo: refactor copy-pasted code
-    public class ShuffledQuestion : BaseQuestion
+    public sealed class ShuffledQuestion : BaseQuestion
     {
-        public ShuffledQuestion(string text, IList<string> answers, IList<int> rightAnswers)
+        public ShuffledQuestion(string text, IImmutableList<string> answers, IImmutableList<int> rightAnswers)
         {
             Text = text;
             
-            Answers = answers.Shuffle().ToArray();
+            Answers = Shuffle(answers);
 
             var rightAnswerTexts =
                 GetRightAnswerTexts(answers, rightAnswers);
@@ -20,14 +21,17 @@ namespace AVS5.Core
         public ShuffledQuestion(BaseQuestion question)
         {
             Text = question.Text;
-            
-            Answers = question.Answers.Shuffle().ToArray();
+
+            Answers = Shuffle(question.Answers);
 
             var rightAnswerTexts = GetRightAnswerTexts(question.Answers, question.RightAnswers);
             RightAnswers = GetRightAnswers(Answers, rightAnswerTexts);
         }
+
+        private static IImmutableList<T> Shuffle<T>(IEnumerable<T> source) =>
+            source.Shuffle().ToImmutableList();        
         
-        private static IList<string> GetRightAnswerTexts(IList<string> answers, IList<int> rightAnswers)
+        private static IImmutableList<string> GetRightAnswerTexts(IImmutableList<string> answers, IImmutableList<int> rightAnswers)
         {
             var rightAnswerTexts = new List<string>(rightAnswers.Count);
 
@@ -35,12 +39,12 @@ namespace AVS5.Core
                 .AddRange(rightAnswers
                     .Select(answer => answers[answer - 1]));
 
-            return rightAnswerTexts;
+            return rightAnswerTexts.AsEnumerable().ToImmutableList();
         }
 
-        private static IList<int> GetRightAnswers(IList<string> answers, IList<string> rightAnswerTexts)
+        private static IImmutableList<int> GetRightAnswers(IImmutableList<string> answers, IImmutableList<string> rightAnswerTexts)
         {
-            // todo: make more efficient. O(m * n) -> O(m), where m - length of answers, n - length of right answers
+            // todo: make more efficient?
             var rightAnswers = new List<int>(rightAnswerTexts.Count);
 
             for (var i = 0; i < answers.Count; i++)
@@ -49,7 +53,7 @@ namespace AVS5.Core
                         .Where(t => t.Equals(answers[i]))
                         .Select(_ => i + 1));
 
-            return rightAnswers;
+            return rightAnswers.AsEnumerable().ToImmutableList();
         }
     }
 }

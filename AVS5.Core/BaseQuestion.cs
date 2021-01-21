@@ -1,16 +1,18 @@
 ﻿using System.Collections.Generic;
+using System.Collections.Immutable;
+using System.Linq;
 
 namespace AVS5.Core
 {
     public abstract class BaseQuestion
     {
         public string Text { get; init; }
-        public IList<string> Answers { get; init; }
-        public IList<int> RightAnswers { get; init; }
+        public IImmutableList<string> Answers { get; init; }
+        public IImmutableList<int> RightAnswers { get; init; }
 
         protected BaseQuestion() {}
         
-        protected BaseQuestion(string text, IList<string> answers, IList<int> rightAnswers)
+        protected BaseQuestion(string text, IImmutableList<string> answers, IImmutableList<int> rightAnswers)
         {
             Text = text;
             Answers = answers;
@@ -18,12 +20,15 @@ namespace AVS5.Core
         }
 
         public string GetAnswers() =>
-            Answers.FromIList();
+            Answers.AsEnumerable().ToList().FromIList();
 
         public string GetRightAnswers() =>
-            RightAnswers.FromIList();
+            RightAnswers.AsEnumerable().ToList().FromIList();
         
         public override string ToString() =>
-            $"{Text}\n{Answers.FromIList()}{string.Join(", ", RightAnswers)}";
+            $"{Text}\n{GetAnswers()}";
+
+        public virtual string GetFull() =>
+            ToString() + $"{string.Join(", ", RightAnswers)}\n";
     }
 }

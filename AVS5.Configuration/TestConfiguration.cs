@@ -6,6 +6,11 @@
     public class TestConfiguration
     {
         /// <summary>
+        /// Количество вопросов для тренировки.
+        /// </summary>
+        public readonly int QuestionCount;
+
+        /// <summary>
         /// true - сначала все вопросы перемешиваются, потом из них берутся первые n штук.
         /// false - сначала из исходного упорядоченного списка берётся n тестов, потом они перемешиваются.
         /// Как работает <see cref="ShuffleThenTake"/>?
@@ -20,7 +25,7 @@
         /// <see cref="FirstQuestion"/> приравниваем числу 20.
         /// Затем в программе указываем, что нужно 60 вопросов (80-20).
         /// </summary>
-        public readonly bool ShuffleThenTake;
+        public bool ShuffleThenTake;
 
         /// <summary>
         /// true - результат ответа показывается сразу, после его введения.
@@ -29,24 +34,26 @@
         public readonly bool ShowResultInstantly;
 
         /// <summary>
+        /// true - варианты ответов распологаются в случайном порядке.
+        /// false - варианты ответов стоят на одном месте.
+        /// </summary>
+        public readonly bool IsRandomOrder;
+
+        /// <summary>
         /// Номер вопроса, с которого будет начинаться отбор тестов.
         /// Следует использовать, если хотите прорешать определённый вариант.
         /// Работает, если <see cref="ShuffleThenTake"/> сброшен.
         /// </summary>
         public readonly int FirstQuestion;
 
-        /// <summary>
-        /// true - варианты ответов распологаются в случайном порядке.
-        /// false - варианты ответов стоят на одном месте.
-        /// </summary>
-        public readonly bool IsRandomOrder;
-
         public TestConfiguration(
+            int questionCount,
             bool shuffleThenTake = false,
             bool showResultInstantly = true,
             bool isRandomOrder = true,
             int firstQuestion = 1)
         {
+            QuestionCount = questionCount;
             ShuffleThenTake = shuffleThenTake;
             ShowResultInstantly = showResultInstantly;
             IsRandomOrder = isRandomOrder;
