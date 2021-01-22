@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Collections.Immutable;
 using System.Linq;
 using AVS5.Configuration;
@@ -8,8 +9,8 @@ namespace AVS5.Client
 {
     internal sealed partial class QuestionPull
     {
-        public IImmutableList<BaseQuestion> Questions { get; init; }
-        public TestConfiguration Configuration { get; init; }
+        public readonly IImmutableList<BaseQuestion> Questions;
+        public readonly TestConfiguration Configuration;
 
         private QuestionPull(IImmutableList<BaseQuestion> questions, TestConfiguration configuration)
         {
@@ -51,9 +52,9 @@ namespace AVS5.Client
     {
         public static IEnumerable<BaseQuestion> Skip(
             this IEnumerable<BaseQuestion> source,
-            bool shuffleThenTake,
+            bool shuffleBeforeTaking,
             int startFrom) =>
-            !shuffleThenTake && startFrom > 1
+            !shuffleBeforeTaking && startFrom > 1
                 ? source
                     .Skip(startFrom - 1)
                 : source;
@@ -62,7 +63,10 @@ namespace AVS5.Client
             this IEnumerable<BaseQuestion> source,
             bool isRandomOrder) =>
             isRandomOrder
-                ? source.Select(QuestionBuilder.ToShuffledQuestion)
+                ? QuestionBuilder.ToShuffledQuestion(source)
                 : source;
+
+        public static string From(this IEnumerable<BaseQuestion> source) => 
+            string.Join('\n', source.Select(x => x.Text));
     }
 }

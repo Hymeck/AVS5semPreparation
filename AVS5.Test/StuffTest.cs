@@ -21,5 +21,22 @@ namespace AVS5.Test
                           list1.All(list2.Contains);
             Assert.AreEqual(true, isEqual);
         }
+
+        [Test]
+        public void PropertyTest()
+        {
+            var testClass = new SomeClass(4);
+            Assert.AreEqual(false, testClass.IsZero);
+            testClass.Value = 0;
+            Assert.AreEqual(true, testClass.IsZero);
+        }
+
+        private class SomeClass
+        {
+            public int Value { get; set; }
+            public bool IsZero => Value == 0;
+
+            public SomeClass(int value) => Value = value;
+        }
     }
 }

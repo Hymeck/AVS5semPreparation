@@ -1,4 +1,4 @@
-﻿using System.Collections.Immutable;
+﻿using System.Collections.Generic;
 using AVS5.Configuration;
 using AVS5.Core;
 using AVS5.Data;
@@ -8,32 +8,20 @@ namespace AVS5.Client
 {
     internal sealed class Logic
     {
-        private IImmutableList<QuestionDto> _questionDtos;
-        public bool IsLoaded { get; private set; }
-        public bool IsConfigured { get; private set; }
+        private IEnumerable<QuestionDto> _questionDtos;
+        public bool IsLoaded => _questionDtos != null;
+        public bool IsConfigured => Pull != null;
         public QuestionPull Pull { get; private set; }
+        public AnswerState AnswerState { get; private set; } = AnswerState.Empty;
 
-        public void LoadData(IDataProvider<QuestionDto> dataProvider)
-        {
-            if (IsLoaded)
-                return;
-            
-            _questionDtos ??= dataProvider.GetData().ToImmutableList();
-            IsLoaded = true;
-        }
+        public void LoadData(IDataProvider<QuestionDto> dataProvider) => 
+            _questionDtos ??= dataProvider.GetData();
 
-        public void Setup(TestConfiguration configuration)
-        {
-            if (IsConfigured)
-                return;
-            
-            Pull ??= QuestionPull.GetConfiguredInstance(QuestionBuilder.ToQuestion(_questionDtos), configuration);
-            IsConfigured = true;
-        }
+        public void Setup(TestConfiguration configuration) => 
+            Pull ??= QuestionPull.GetConfiguredInstance(QuestionBuilder
+                .ToQuestion(_questionDtos), configuration);
 
-        public void AddAnswer(UserAnswer userAnswer)
-        {
-            throw new System.NotImplementedException();
-        }
+        public void AddAnswer(UserAnswer userAnswer) => 
+            AnswerState += userAnswer;
     }
 }

@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Collections.Immutable;
+using System.Linq;
 using AVS5.Configuration;
 using AVS5.Core;
 using AVS5.Data;
@@ -19,26 +20,20 @@ namespace AVS5.Client
             _logic = new Logic();
         }
 
-        public void LoadData(IDataProvider<QuestionDto> dataProvider)
-        {
+        public void LoadData(IDataProvider<QuestionDto> dataProvider) => 
             _logic.LoadData(dataProvider);
-        }
 
-        /// <summary>
-        /// Throws <see cref="InvalidOperationException"/> if data was not loaded.
-        /// </summary>
-        /// <exception cref="InvalidOperationException">Data was not loaded.</exception>
         private void CheckIsLoaded()
         {
             if (!_logic.IsLoaded)
                 throw new InvalidOperationException("Data was not loaded. Load data before invoking this method.");
         }
-        
+
         public void Setup()
         {
             if (_logic.IsConfigured)
                 return;
-            
+
             CheckIsLoaded();
             _logic.Setup(Configuration);
         }
@@ -51,18 +46,17 @@ namespace AVS5.Client
 
         private void CheckQuestionNumber(int questionNumber)
         {
-            if (questionNumber < 1 || questionNumber >= _logic.Pull.Questions.Count)
+            if (questionNumber < 1 || questionNumber > _logic.Pull.Questions.Count)
                 throw new ArgumentOutOfRangeException(nameof(questionNumber), "Question number is out of range.");
         }
-        
-        public void AddAnswer(int questionNumber, IImmutableList<int> chosenAnswers)
+
+        public void AddAnswer(int questionNumber, IEnumerable<int> chosenAnswers)
         {
-            CheckIsLoaded();
             CheckIsSetup();
             CheckQuestionNumber(questionNumber);
-            
-            var question = _logic.Pull.Questions[questionNumber];
-            var userAnswer = new UserAnswer(question, chosenAnswers);
+
+            var question = _logic.Pull.Questions[questionNumber - 1];
+            var userAnswer = new UserAnswer(question, chosenAnswers.ToImmutableList());
             _logic.AddAnswer(userAnswer);
         }
 
@@ -70,6 +64,12 @@ namespace AVS5.Client
         {
             CheckIsSetup();
             return _logic.Pull.Questions;
+        }
+
+        public Result GetResult()
+        {
+            CheckIsSetup();
+            return _logic.AnswerState.Result;
         }
     }
 }
