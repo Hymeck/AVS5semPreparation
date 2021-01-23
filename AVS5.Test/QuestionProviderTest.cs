@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using System.Collections.Immutable;
 using System.Linq;
 using AVS5.Data;
 using AVS5.Data.Dto;
@@ -15,7 +16,7 @@ namespace AVS5.Test
         [SetUp]
         public void Setup()
         {
-            _data = new QuestionDataProvider(_location);
+            _data = new QuestionDtoProvider(_location);
             _questions = _data.GetData().ToList();
         }
 
@@ -36,7 +37,7 @@ namespace AVS5.Test
         [Test]
         public void FirstQuestionAnswers()
         {
-            var actualAnswers = _questions[0].Answers;
+            var actualAnswers = _questions[0].Answers.ToImmutableList();
             IList<string> expectedAnswers = new List<string>(5)
             {
                 "Таблица",

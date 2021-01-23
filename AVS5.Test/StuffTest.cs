@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Collections.Immutable;
 using System.Linq;
 using NUnit.Framework;
 
@@ -31,6 +32,26 @@ namespace AVS5.Test
             Assert.AreEqual(true, testClass.IsZero);
         }
 
+        [Test]
+        public void StackTest()
+        {
+            var stack = new Stack<int>();
+            stack.Push(1);
+            stack.Push(2);
+            stack.Push(3);
+            stack.Push(4);
+            // order:
+            // 4
+            // 3
+            // 2
+            // 1
+            var top = stack.Pop();
+            Assert.AreEqual(4, top);
+
+            var listed = stack.ToImmutableList();
+            Assert.AreEqual(3, listed[0]);
+        }
+        
         private class SomeClass
         {
             public int Value { get; set; }

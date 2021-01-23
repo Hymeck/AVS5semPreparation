@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Collections.Immutable;
-using System.Linq;
 using AVS5.Configuration;
 using AVS5.Core;
 using AVS5.Data;
@@ -50,7 +49,7 @@ namespace AVS5.Client
                 throw new ArgumentOutOfRangeException(nameof(questionNumber), "Question number is out of range.");
         }
 
-        public void AddAnswer(int questionNumber, IEnumerable<int> chosenAnswers)
+        public UserAnswer AddAnswer(int questionNumber, IEnumerable<int> chosenAnswers)
         {
             CheckIsSetup();
             CheckQuestionNumber(questionNumber);
@@ -58,6 +57,7 @@ namespace AVS5.Client
             var question = _logic.Pull.Questions[questionNumber - 1];
             var userAnswer = new UserAnswer(question, chosenAnswers.ToImmutableList());
             _logic.AddAnswer(userAnswer);
+            return userAnswer;
         }
 
         public IImmutableList<BaseQuestion> GetQuestions()

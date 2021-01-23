@@ -13,19 +13,19 @@
         /// <summary>
         /// true - сначала все вопросы перемешиваются, потом из них берутся первые n штук.
         /// false - сначала из исходного упорядоченного списка берётся n тестов, потом они перемешиваются.
-        /// Как работает <see cref="ShuffleThenTake"/>?
+        /// Как работает <see cref="ShuffleBeforeTaking"/>?
         /// Пусть у нас есть последовательность чисел (номера вопросов) 123456789.
         /// Допустим, необходимо потренеровать 5 вопросов.
-        /// Если <see cref="ShuffleThenTake"/> = true, то произойдет следующее:
+        /// Если <see cref="ShuffleBeforeTaking"/> = true, то произойдет следующее:
         /// 123456789 ---(вопросы перемешиваются)---> 476592138 ---(берется 5 штук)---> 47659 - пул вопросов.
-        /// Если <see cref="ShuffleThenTake"/> = false, то произойдет следующее:
+        /// Если <see cref="ShuffleBeforeTaking"/> = false, то произойдет следующее:
         /// 123456789 ---(берём 5 штук)---> 12345 ---(вопросы перемешиваются)---> 43125 - пул вопросов.
         /// Если необходимо потренеровать, например, с 20 по 80 вопрос, то делаем следующее:
-        /// Устанавливаем <see cref="ShuffleThenTake"/> в false,
+        /// Устанавливаем <see cref="ShuffleBeforeTaking"/> в false,
         /// <see cref="FirstQuestion"/> приравниваем числу 20.
         /// Затем в программе указываем, что нужно 60 вопросов (80-20).
         /// </summary>
-        public bool ShuffleThenTake;
+        public bool ShuffleBeforeTaking;
 
         /// <summary>
         /// true - результат ответа показывается сразу, после его введения.
@@ -42,19 +42,19 @@
         /// <summary>
         /// Номер вопроса, с которого будет начинаться отбор тестов.
         /// Следует использовать, если хотите прорешать определённый вариант.
-        /// Работает, если <see cref="ShuffleThenTake"/> сброшен.
+        /// Работает, если <see cref="ShuffleBeforeTaking"/> сброшен.
         /// </summary>
         public readonly int FirstQuestion;
 
         public TestConfiguration(
             int questionCount,
-            bool shuffleThenTake = false,
+            bool shuffleBeforeTaking = false,
             bool showResultInstantly = true,
             bool isRandomOrder = true,
             int firstQuestion = 1)
         {
             QuestionCount = questionCount;
-            ShuffleThenTake = shuffleThenTake;
+            ShuffleBeforeTaking = shuffleBeforeTaking;
             ShowResultInstantly = showResultInstantly;
             IsRandomOrder = isRandomOrder;
             FirstQuestion = firstQuestion;

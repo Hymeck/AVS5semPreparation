@@ -7,30 +7,30 @@ namespace AVS5.Client
 {
     internal partial class AnswerState
     {
-        public readonly IImmutableList<UserAnswer> Answers;
+        public readonly IImmutableList<UserAnswer> CurrentAnswers;
         public readonly Result Result;
 
         public static readonly AnswerState Empty = new(ImmutableList<UserAnswer>.Empty, Result.Empty);
 
-        private AnswerState(IImmutableList<UserAnswer> answers, Result result)
+        private AnswerState(IImmutableList<UserAnswer> currentAnswers, Result result)
         {
-            Answers = answers;
+            CurrentAnswers = currentAnswers;
             Result = result;
         }
 
         public AnswerState(UserAnswer answer)
         {
-            Answers = ImmutableList<UserAnswer>.Empty.Add(answer);
-            Result = FromAnswers(Answers);
+            CurrentAnswers = ImmutableList<UserAnswer>.Empty.Add(answer);
+            Result = FromAnswers(CurrentAnswers);
         }
 
-        public AnswerState(IImmutableList<UserAnswer> answers) :
-            this(answers, FromAnswers(answers))
+        public AnswerState(IImmutableList<UserAnswer> currentAnswers) :
+            this(currentAnswers, FromAnswers(currentAnswers))
         {
         }
 
         public AnswerState AddAnswer(UserAnswer answer) =>
-            new(Answers.Add(answer));
+            new(CurrentAnswers.Add(answer));
     }
 
     internal partial class AnswerState
@@ -43,10 +43,12 @@ namespace AVS5.Client
                 .Select(x => x.Question)
                 .ToImmutableList();
 
-            // todo: correct this place
-            var percentage = (double)(1 - wrongAnswers.Count / listedAnswers.Count) * 100;
+            var percentage = CalculatePercentage(wrongAnswers.Count, listedAnswers.Count);
             return new Result(percentage, wrongAnswers);
         }
+
+        private static double CalculatePercentage(int wrongCount, int answerCount) => 
+            (1 - (double)wrongCount / answerCount) * 100;
 
         public static AnswerState AddAnswer(AnswerState state, UserAnswer answer) =>
             state.AddAnswer(answer);

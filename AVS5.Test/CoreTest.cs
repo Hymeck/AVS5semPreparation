@@ -16,7 +16,7 @@ namespace AVS5.Test
         [SetUp]
         public void Setup()
         {
-            _data = new QuestionDataProvider(_location);
+            _data = new QuestionDtoProvider(_location);
             _questions = _data.GetData().ToList();
         }
     }

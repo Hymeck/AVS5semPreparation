@@ -5,7 +5,10 @@ using System.Linq;
 namespace AVS5.Core
 {
     // todo: refactor copy-pasted code
-    public sealed class ShuffledQuestion : BaseQuestion
+    /// <summary>
+    /// Represents <see cref="BaseQuestion"/> question that get shuffled on initializing.
+    /// </summary>
+    public partial class ShuffledQuestion : BaseQuestion
     {
         public ShuffledQuestion(string text, IImmutableList<string> answers, IImmutableList<int> rightAnswers)
         {
@@ -18,16 +21,13 @@ namespace AVS5.Core
             RightAnswers = GetRightAnswers(Answers, rightAnswerTexts);
         }
 
-        public ShuffledQuestion(BaseQuestion question)
+        public ShuffledQuestion(BaseQuestion question) : this(question.Text, question.Answers, question.RightAnswers)
         {
-            Text = question.Text;
-
-            Answers = Shuffle(question.Answers);
-
-            var rightAnswerTexts = GetRightAnswerTexts(question.Answers, question.RightAnswers);
-            RightAnswers = GetRightAnswers(Answers, rightAnswerTexts);
         }
+    }
 
+    public partial class ShuffledQuestion
+    {
         private static IImmutableList<T> Shuffle<T>(IEnumerable<T> source) =>
             source.Shuffle().ToImmutableList();        
         

@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Collections.Immutable;
 using System.Linq;
 using AVS5.Configuration;
@@ -41,7 +40,7 @@ namespace AVS5.Client
         private static IImmutableList<BaseQuestion> Configure(IEnumerable<BaseQuestion> questions,
             TestConfiguration configuration) =>
             questions
-                .Skip(configuration.ShuffleThenTake, configuration.FirstQuestion)
+                .SkipOrShuffle(configuration.ShuffleBeforeTaking, configuration.FirstQuestion)
                 .Take(configuration.QuestionCount)
                 .ToShuffledQuestion(configuration.IsRandomOrder)
                 .Shuffle()
@@ -50,14 +49,14 @@ namespace AVS5.Client
 
     internal static class Extensions
     {
-        public static IEnumerable<BaseQuestion> Skip(
+        public static IEnumerable<BaseQuestion> SkipOrShuffle(
             this IEnumerable<BaseQuestion> source,
             bool shuffleBeforeTaking,
             int startFrom) =>
             !shuffleBeforeTaking && startFrom > 1
                 ? source
                     .Skip(startFrom - 1)
-                : source;
+                : source.Shuffle();
 
         public static IEnumerable<BaseQuestion> ToShuffledQuestion(
             this IEnumerable<BaseQuestion> source,

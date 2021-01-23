@@ -10,41 +10,42 @@ namespace AVS5.Core
         private static readonly Random Random = new ();
         /// <summary>
         /// Shuffles a <see cref="IEnumerable{T}"/> collection.
-        /// Note that <see cref="T"/> should be numeric.
         /// </summary>
-        /// <param name="source">A collection to shuffle.</param>
-        /// <typeparam name="T">Numeric.</typeparam>
+        /// <param name="source">A <see cref="IEnumerable{T}"/> collection to shuffle.</param>
+        /// <typeparam name="T">The type of the elements of source.</typeparam>
         /// <returns>Shuffled <see cref="IEnumerable{T}"/> collection.</returns>
         public static IEnumerable<T> Shuffle<T>(this IEnumerable<T> source) => 
             source.OrderBy(x => Random.Next());
 
         /// <summary>
-        /// Returns multiline string that represents <see cref="source"/> collection.
+        /// Returns multiline string that represents <see cref="IEnumerable{T}"/> collection.
         /// </summary>
-        /// <param name="source">A collection of <see cref="string"/> items.</param>
-        /// <param name="closingCharAfterNumber">Encloses number.</param>
-        /// <param name="s">Determines starting enumeration number (1 or 0).</param>
+        /// <param name="source">A <see cref="IEnumerable{T}"/> collection to represent.</param>
+        /// <param name="closingCharAfterNumber">A character that encloses item number.</param>
+        /// <param name="s">A <see cref="StarterPoint"/> object that determines starting enumeration number (1 or 0).</param>
         /// <returns>Multiline string. Line contains order number, <see cref="closingCharAfterNumber"/>, space and i'th source element.</returns>
-        public static string FromIList<T>(this IList<T> source, char closingCharAfterNumber = ')', StarterPoint s = StarterPoint.One)
+        public static string From<T>(this IEnumerable<T> source, char closingCharAfterNumber = ')', StarterPoint s = StarterPoint.One)
         {
             var sb = new StringBuilder();
-            for (var i = 0; i < source.Count; i++)
-                sb.AppendLine($"{(int)(i + s)}{closingCharAfterNumber} {source[i]}");
+            
+            var i = (int) s;
+            foreach (var item in source) 
+                sb.AppendLine($"{i++}{closingCharAfterNumber} {item}");
+
             return sb.ToString();
         }
         
         /// <summary>
-        /// Used in <see cref="Extensions.FromIList{T}"/> method for determing
-        /// starting numerating number.
+        /// Used in <see cref="Extensions.From{T}"/> method for determing starting enumerating number.
         /// </summary>
         public enum StarterPoint 
         {
             /// <summary>
-            /// Use it when you need to start numerate from zero.
+            /// Use it when you need to start enumerate from zero.
             /// </summary>
             Zero = 0,
             /// <summary>
-            /// Use it when you need to start numerate from one.
+            /// Use it when you need to start enumerate from one.
             /// </summary>
             One = 1
         }
