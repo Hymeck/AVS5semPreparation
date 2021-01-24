@@ -4,7 +4,6 @@ using System.Linq;
 
 namespace AVS5.Core
 {
-    // todo: refactor copy-pasted code
     /// <summary>
     /// Represents <see cref="BaseQuestion"/> question that get shuffled on initializing.
     /// </summary>
@@ -13,24 +12,22 @@ namespace AVS5.Core
         public ShuffledQuestion(string text, IImmutableList<string> answers, IImmutableList<int> rightAnswers)
         {
             Text = text;
-            
-            Answers = Shuffle(answers);
+
+            Answers = answers.Shuffle().ToImmutableList();
 
             var rightAnswerTexts =
                 GetRightAnswerTexts(answers, rightAnswers);
             RightAnswers = GetRightAnswers(Answers, rightAnswerTexts);
         }
 
-        public ShuffledQuestion(BaseQuestion question) : this(question.Text, question.Answers, question.RightAnswers)
+        public ShuffledQuestion(BaseQuestion question) : 
+            this(question.Text, question.Answers, question.RightAnswers)
         {
         }
     }
 
     public partial class ShuffledQuestion
     {
-        private static IImmutableList<T> Shuffle<T>(IEnumerable<T> source) =>
-            source.Shuffle().ToImmutableList();        
-        
         private static IImmutableList<string> GetRightAnswerTexts(IImmutableList<string> answers, IImmutableList<int> rightAnswers)
         {
             var rightAnswerTexts = new List<string>(rightAnswers.Count);
@@ -39,7 +36,7 @@ namespace AVS5.Core
                 .AddRange(rightAnswers
                     .Select(answer => answers[answer - 1]));
 
-            return rightAnswerTexts.AsEnumerable().ToImmutableList();
+            return rightAnswerTexts.ToImmutableList();
         }
 
         private static IImmutableList<int> GetRightAnswers(IImmutableList<string> answers, IImmutableList<string> rightAnswerTexts)
@@ -53,7 +50,7 @@ namespace AVS5.Core
                         .Where(t => t.Equals(answers[i]))
                         .Select(_ => i + 1));
 
-            return rightAnswers.AsEnumerable().ToImmutableList();
+            return rightAnswers.ToImmutableList();
         }
     }
 }

@@ -6,7 +6,7 @@ using AVS5.Data.Dto;
 
 namespace AVS5.Client
 {
-    internal sealed class Logic
+    internal sealed class TestClientLogic
     {
         private IEnumerable<QuestionDto> _questionDtos;
         public bool IsLoaded => _questionDtos != null;

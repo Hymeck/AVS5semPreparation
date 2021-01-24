@@ -10,11 +10,8 @@
 
         public bool DisplaySettings { get; init; } = true;
 
-        public string File { get; init; } = "avs_demo.txt";
-
-        public ConsoleConfiguration(string file, bool displayResultInstantly = true, bool displaySettings = true)
+        public ConsoleConfiguration(bool displayResultInstantly = true, bool displaySettings = true)
         {
-            File = file;
             DisplayResultInstantly = displayResultInstantly;
             DisplaySettings = displaySettings;
         }

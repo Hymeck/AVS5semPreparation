@@ -26,23 +26,17 @@ namespace AVS5.Data
 
         private static IEnumerable<QuestionDto> FromLines(string[] lines)
         {
-            // IList<QuestionDto> questions = new List<QuestionDto>(lines.Length / 4 + 1);
-            
             for (var i = 0; i < lines.Length; i += 4)
             {
-                var (t, v, r) = GetCoreInfo(lines, i);
-                var q = new QuestionDto(t, ParseAnswers(v), ParseRightAnswers(r));
-                // questions.Add(q);
-                yield return q;
+                var (t, a, ra) = GetCoreInfo(lines, i);
+                yield return new QuestionDto(t, ParseAnswers(a), ParseRightAnswers(ra));
             }
-
-            // return questions;
         }
 
         private string[] ReadAllFromFile() => 
             File.ReadAllLines(_fileLocation);
 
-        private static (string text, string variants, string rightAnswers) GetCoreInfo(string[] lines, int index) =>
+        private static (string text, string answers, string rightAnswers) GetCoreInfo(string[] lines, int index) =>
             (lines[index], lines[index + 1], lines[index + 2]);
         
         private static IEnumerable<string> ParseAnswers(string variants) => 

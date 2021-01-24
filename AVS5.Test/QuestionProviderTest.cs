@@ -33,7 +33,7 @@ namespace AVS5.Test
             Assert.AreEqual(firstText, _questions[0].Text.Trim());
         }
 
-        // todo: why does this test fail?
+        // why does this test fail?
         [Test]
         public void FirstQuestionAnswers()
         {

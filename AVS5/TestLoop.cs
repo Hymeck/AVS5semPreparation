@@ -42,7 +42,6 @@ namespace AVS5
             int result;
             
             while (!int.TryParse(Console.ReadLine(), out result) || !(result >= min && result <= max))
-                // todo: add delegate for printing error?
                 Console.Write("Неверный ввод, повторите еще раз: ");
             
             return result;
@@ -60,7 +59,6 @@ namespace AVS5
             
             catch (Exception)
             {
-                // todo: delegate error printing
                 Console.WriteLine($"Файл по пути \"{_options.Location}\" не найден");
                 return false;
             }
@@ -89,7 +87,6 @@ namespace AVS5
             
             Console.WriteLine($"Тесты успешно загружены ({_questions.Count} шт.)");
             
-            // todo: delegate printing conf params?
             PrintSettings();
             return true;
         }
@@ -207,7 +204,6 @@ namespace AVS5
                         break;
                     }
 
-                    //todo: fix incorrect answer placement (it can be: right answer number == wrong answer number
                     foreach (var q in questionsForTest.Where(question => !question.IsRight))
                     {
                         Console.WriteLine("\n*******************************");

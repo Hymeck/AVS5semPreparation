@@ -7,7 +7,7 @@ namespace AVS5.Client.Console
     {
         public static (TestingConfiguration testingConfig, ConsoleConfiguration displayConfig) Parse(string[] args)
         {
-            return (new (questionCount: 2, firstQuestion: 2), new ConsoleConfiguration());
+            return (new (questionCount: 2, firstQuestion: 2), new ConsoleConfiguration(displayResultInstantly: false));
         }
     }
 }
