@@ -60,26 +60,5 @@ namespace AVS5.Test
 
             public SomeClass(int value) => Value = value;
         }
-        
-        private class DelegateExampleClass
-        {
-            private void PrintOne() => 
-                Console.WriteLine("PrintOne");
-
-            private void PrintFull()
-            {
-                PrintOne();
-                Console.WriteLine("PrintFull");
-            }
-            
-            private Action PrintInt(bool isFull) => 
-                isFull ? PrintFull : PrintOne;
-
-            public void DisplayInfo(bool isFull)
-            {
-                var printer = PrintInt(isFull);
-                printer();
-            }
-        }
     }
 }

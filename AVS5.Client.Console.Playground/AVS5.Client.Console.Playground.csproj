@@ -3,7 +3,7 @@
     <PropertyGroup>
         <OutputType>Exe</OutputType>
         <TargetFramework>net5.0</TargetFramework>
-        <RootNamespace>AVS5.Client.Console</RootNamespace>
+        <RootNamespace>AVS5.Client.Console.Playground</RootNamespace>
     </PropertyGroup>
 
     <ItemGroup>
