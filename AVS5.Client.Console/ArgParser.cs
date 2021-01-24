@@ -5,9 +5,9 @@ namespace AVS5.Client.Console
 {
     public class ArgParser
     {
-        public static TestConfiguration Parse(string[] args)
+        public static (TestingConfiguration testingConfig, ConsoleConfiguration displayConfig) Parse(string[] args)
         {
-            throw new NotImplementedException(nameof(Parse));
+            return (new (questionCount: 2, firstQuestion: 2), new ConsoleConfiguration());
         }
     }
 }

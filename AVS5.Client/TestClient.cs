@@ -10,10 +10,10 @@ namespace AVS5.Client
 {
     public class TestClient
     {
-        public readonly TestConfiguration Configuration;
+        public readonly TestingConfiguration Configuration;
         private readonly Logic _logic;
 
-        public TestClient(TestConfiguration configuration)
+        public TestClient(TestingConfiguration configuration)
         {
             Configuration = configuration;
             _logic = new Logic();
@@ -70,6 +70,12 @@ namespace AVS5.Client
         {
             CheckIsSetup();
             return _logic.AnswerState.Result;
+        }
+
+        public IImmutableList<UserAnswer> GetAnswerHistory()
+        {
+            CheckIsSetup();
+            return _logic.AnswerState.CurrentAnswers;
         }
     }
 }

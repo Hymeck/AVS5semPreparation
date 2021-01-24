@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Collections.Immutable;
 using System.Linq;
 using NUnit.Framework;
@@ -51,13 +52,34 @@ namespace AVS5.Test
             var listed = stack.ToImmutableList();
             Assert.AreEqual(3, listed[0]);
         }
-        
+
         private class SomeClass
         {
             public int Value { get; set; }
             public bool IsZero => Value == 0;
 
             public SomeClass(int value) => Value = value;
+        }
+        
+        private class DelegateExampleClass
+        {
+            private void PrintOne() => 
+                Console.WriteLine("PrintOne");
+
+            private void PrintFull()
+            {
+                PrintOne();
+                Console.WriteLine("PrintFull");
+            }
+            
+            private Action PrintInt(bool isFull) => 
+                isFull ? PrintFull : PrintOne;
+
+            public void DisplayInfo(bool isFull)
+            {
+                var printer = PrintInt(isFull);
+                printer();
+            }
         }
     }
 }

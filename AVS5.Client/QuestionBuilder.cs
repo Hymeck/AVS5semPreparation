@@ -14,14 +14,14 @@ namespace AVS5.Client
                 questionDto.Answers.AsEnumerable().ToImmutableList(), 
                 questionDto.RightAnswers.AsEnumerable().ToImmutableList());
 
-        public static BaseQuestion ToShuffledQuestion(BaseQuestion question) =>
-            new ShuffledQuestion(question);
+        public static IEnumerable<BaseQuestion> ToQuestion(IEnumerable<QuestionDto> source) =>
+            source.Select(ToQuestion);
 
         public static BaseQuestion ToShuffledQuestion(QuestionDto questionDto) =>
             ToShuffledQuestion(ToQuestion(questionDto));
 
-        public static IEnumerable<BaseQuestion> ToQuestion(IEnumerable<QuestionDto> source) =>
-            source.Select(ToQuestion);
+        public static BaseQuestion ToShuffledQuestion(BaseQuestion question) =>
+            new ShuffledQuestion(question);
 
         public static IEnumerable<BaseQuestion> ToShuffledQuestion(IEnumerable<QuestionDto> source) =>
             source.Select(ToShuffledQuestion);

@@ -9,36 +9,36 @@ namespace AVS5.Client
     internal sealed partial class QuestionPull
     {
         public readonly IImmutableList<BaseQuestion> Questions;
-        public readonly TestConfiguration Configuration;
+        public readonly TestingConfiguration Configuration;
 
-        private QuestionPull(IImmutableList<BaseQuestion> questions, TestConfiguration configuration)
+        private QuestionPull(IImmutableList<BaseQuestion> questions, TestingConfiguration configuration)
         {
             Questions = questions;
             Configuration = configuration;
         }
 
-        private QuestionPull(TestConfiguration configuration) : this(ImmutableList<BaseQuestion>.Empty, configuration)
+        private QuestionPull(TestingConfiguration configuration) : this(ImmutableList<BaseQuestion>.Empty, configuration)
         {
         }
     }
 
     internal sealed partial class QuestionPull
     {
-        public static QuestionPull GetDefaultInstance(TestConfiguration configuration) => new(configuration);
+        public static QuestionPull GetDefaultInstance(TestingConfiguration configuration) => new(configuration);
 
         public static QuestionPull GetConfiguredInstance(IEnumerable<BaseQuestion> questions,
-            TestConfiguration configuration) =>
+            TestingConfiguration configuration) =>
             GetConfiguredInstance(questions.ToImmutableList(), configuration);
 
         public static QuestionPull GetConfiguredInstance(IImmutableList<BaseQuestion> questions,
-            TestConfiguration configuration)
+            TestingConfiguration configuration)
         {
             var configuredQuestions = Configure(questions, configuration);
             return new QuestionPull(configuredQuestions, configuration);
         }
 
         private static IImmutableList<BaseQuestion> Configure(IEnumerable<BaseQuestion> questions,
-            TestConfiguration configuration) =>
+            TestingConfiguration configuration) =>
             questions
                 .SkipOrShuffle(configuration.ShuffleBeforeTaking, configuration.FirstQuestion)
                 .Take(configuration.QuestionCount)

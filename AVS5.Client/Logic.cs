@@ -17,7 +17,7 @@ namespace AVS5.Client
         public void LoadData(IDataProvider<QuestionDto> dataProvider) => 
             _questionDtos ??= dataProvider.GetData();
 
-        public void Setup(TestConfiguration configuration) => 
+        public void Setup(TestingConfiguration configuration) => 
             Pull ??= QuestionPull.GetConfiguredInstance(QuestionBuilder
                 .ToQuestion(_questionDtos), configuration);
 
